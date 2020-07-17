@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace EmployeeService.Models
 {
-    public class Employee
+    public class CompanyProject
     {
         [Key]
-        public int Eid { get; set; }
+        public int Pid { get; set; }
 
         [Required]
-        public string Ename { get; set; }
+        public string Pname { get; set; }
 
-        public DateTime DOJ { get; set; }
-
-        public CompanyProject Project { get; set; }
+        public IEnumerable<Employee> Employees { get; set; }
     }
 }

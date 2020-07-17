@@ -16,6 +16,7 @@ namespace EmployeeService.Models
         }
 
         public DbSet<Employee> Employees { get; set; }
-        
+        public DbSet<CompanyProject> CompanyProjects { get; set; }
+
     }
 }

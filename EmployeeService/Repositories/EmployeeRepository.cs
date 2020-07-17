@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeService.Repositories
 {
+    //Employee and project have a one-to-many relationship.
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly EmployeeAppDbContext _db;
@@ -18,8 +19,17 @@ namespace EmployeeService.Repositories
         }
 
         public void AddEmployee(Employee e)
-        {           
-            _db.Employees.Add(e);
+        {
+            int pid = e.Project.Pid;
+            var project = _db.CompanyProjects.Find(pid);
+            var newEmployee = new Employee()
+            {
+                Eid = e.Eid,
+                Ename = e.Ename,
+                DOJ = e.DOJ,
+                Project = project
+            };
+            _db.Employees.Add(newEmployee);
             _db.SaveChanges();
         }
 
@@ -32,14 +42,14 @@ namespace EmployeeService.Repositories
 
         public Employee GetEmployeeById(int id)
         {
-            //IEnumerable<Employee> emps = _db.Employees.Include(p => p.Projects);
-            //return (from e in emps where e.Eid == id select e).FirstOrDefault();
-            return _db.Employees.Find(id);
+            IEnumerable<Employee> emps = _db.Employees.Include(p => p.Project);
+            return (from e in emps where e.Eid == id select e).FirstOrDefault();
+            //return _db.Employees.Find(id);
         }
 
         public List<Employee> GetEmployees()
         {
-            return _db.Employees.ToList();
+            return _db.Employees.Include(p => p.Project).ToList();
         }
 
         public void UpdateEmployee(Employee e)
